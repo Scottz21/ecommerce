@@ -5,6 +5,8 @@ import { useState } from "react";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const dispatch = useDispatch();
+
+  // Local state to show "Added!" feedback message
   const [added, setAdded] = useState(false);
 
   return (
@@ -21,11 +23,13 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
         cursor: "pointer",
         position: "relative",
       }}
+      // Apply hover effect on mouse enter
       onMouseEnter={(e) => {
         const target = e.currentTarget as HTMLDivElement;
         target.style.transform = "translateY(-6px) scale(1.02)";
         target.style.boxShadow = "0 16px 32px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(13, 110, 253, 0.08)";
       }}
+      // Remove hover effect on mouse leave
       onMouseLeave={(e) => {
         const target = e.currentTarget as HTMLDivElement;
         target.style.transform = "none";
@@ -72,12 +76,13 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             {product.rating.rate} ★
           </span>
         </div>
+        {/* Add to Cart button. Shows feedback when clicked. */}
         <button
           className="btn btn-success w-100"
           onClick={() => {
             dispatch(addToCart(product));
             setAdded(true);
-            setTimeout(() => setAdded(false), 1200);
+            setTimeout(() => setAdded(false), 1200); // Hide feedback after 1.2s
           }}
         >
           Add to Cart
