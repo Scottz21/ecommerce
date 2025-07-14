@@ -2,99 +2,113 @@ import type { Product } from "../types/types";
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../redux/cartSlice';
 import { useState } from "react";
+import {  
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  Chip,
+} from "@mui/material";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const dispatch = useDispatch();
-
-  // Local state to show "Added!" feedback message
-  const [added, setAdded] = useState(false);
+  const [added, setAdded] = useState(false); // Track "Added to cart" feedback state
 
   return (
-    <div
-      className="card m-2"
-      style={{
-        width: "260px",
-        border: "1px solid rgba(0, 0, 0, 0.05)",
-        borderRadius: "1rem",
-        overflow: "hidden",
-        backgroundColor: "#fff",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)", 
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-        cursor: "pointer",
-        position: "relative",
-      }}
-      // Apply hover effect on mouse enter
-      onMouseEnter={(e) => {
-        const target = e.currentTarget as HTMLDivElement;
-        target.style.transform = "translateY(-6px) scale(1.02)";
-        target.style.boxShadow = "0 16px 32px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(13, 110, 253, 0.08)";
-      }}
-      // Remove hover effect on mouse leave
-      onMouseLeave={(e) => {
-        const target = e.currentTarget as HTMLDivElement;
-        target.style.transform = "none";
-        target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.06)"; 
+    <Card
+      elevation={4}
+      sx={{
+        width: 340,                  // Wider card for visual emphasis
+        minWidth: 320,
+        borderRadius: 4,
+        transition: "transform 0.2s, box-shadow 0.2s",
+        "&:hover": {
+          transform: "scale(1.035)",
+          boxShadow: "0 10px 32px 0 rgba(80,120,220,0.13)",
+        },
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        background: "linear-gradient(135deg, #fffbe6 65%, #f0f4ff 100%)"
       }}
     >
-      <img
-        src={product.image}
+      {/* Product image */}
+      <CardMedia
+        component="img"
+        image={product.image}
         alt={product.title}
-        className="card-img-top"
-        style={{
-          height: "200px",
+        sx={{
+          height: 200, // Keeps images a consistent height
           objectFit: "contain",
-          background: "linear-gradient(135deg, #f9fafb, #e9ecf3)",
-          padding: "1.25rem",
+          background: "linear-gradient(90deg,#fffbe6 80%, #e3f0ff 100%)",
+          p: 2,
         }}
       />
-      <div className="card-body p-3">
-        <h5 className="card-title mb-1 fw-semibold text-dark" style={{ fontSize: "1.1rem" }}>
-          {product.title}
-        </h5>
-        <h6 className="text-secondary mb-2" style={{ fontSize: "0.9rem" }}>
+      {/* Product info and actions */}
+      <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+        {/* Category badge */}
+        <Typography variant="subtitle2" color="primary" sx={{ fontWeight: 600, mb: 0.5 }}>
           {product.category}
-        </h6>
-        <p className="card-text text-muted mb-3" style={{ fontSize: "0.92rem", minHeight: "48px", lineHeight: "1.4" }}>
+        </Typography>
+        {/* Title */}
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, minHeight: 58 }}>
+          {product.title}
+        </Typography>
+        {/* Description */}
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mb: 2, minHeight: 46 }}
+        >
           {product.description}
-        </p>
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <span className="fw-bold text-primary" style={{ fontSize: "1.1rem" }}>
+        </Typography>
+        {/* Price and rating */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+          <Typography variant="subtitle1" color="success.main" sx={{ fontWeight: 700 }}>
             ${product.price}
-          </span>
-          <span
-            className="badge"
-            style={{
-              background: "linear-gradient(90deg, #ffe259, #ffa751)",
-              color: "#212529",
-              fontWeight: 600,
-              fontSize: "0.85rem",
-              padding: "0.4rem 0.75rem",
-              borderRadius: "1rem",
-              boxShadow: "0 2px 6px rgba(255, 174, 81, 0.4)",
+          </Typography>
+          <Chip
+            label={`${product.rating.rate} ★`}
+            size="small"
+            sx={{
+              bgcolor: "#fff8e1",
+              color: "#ff9800",
+              fontWeight: 700,
+              fontSize: "1rem",
+              px: 1.5,
+              borderRadius: 2
             }}
-          >
-            {product.rating.rate} ★
-          </span>
-        </div>
-        {/* Add to Cart button. Shows feedback when clicked. */}
-        <button
-          className="btn btn-success w-100"
+          />
+        </Box>
+        {/* Add to Cart button with feedback */}
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
           onClick={() => {
-            dispatch(addToCart(product));
-            setAdded(true);
-            setTimeout(() => setAdded(false), 1200); // Hide feedback after 1.2s
+            dispatch(addToCart(product)); // Dispatch add-to-cart action
+            setAdded(true);               // Show feedback
+            setTimeout(() => setAdded(false), 1200); // Remove feedback after 1.2s
+          }}
+          sx={{
+            fontWeight: 700,
+            letterSpacing: 1,
+            mb: 0.5,
+            background: "linear-gradient(90deg, #43cea2 0%, #185a9d 100%)"
           }}
         >
           Add to Cart
-        </button>
-        {/* Inline feedback message */}
+        </Button>
+        {/* Temporary added-to-cart confirmation */}
         {added && (
-          <div style={{ color: "green", fontWeight: 600, textAlign: "center", marginTop: "0.3rem" }}>
+          <Typography variant="body2" sx={{ color: "green", textAlign: "center", mt: 0.5 }}>
             ✓ Added!
-          </div>
+          </Typography>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

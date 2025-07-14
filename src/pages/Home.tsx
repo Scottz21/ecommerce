@@ -4,114 +4,139 @@ import ProductCard from "../components/ProductCard";
 import { useProductContext } from "../context/ProductContext";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { fetchProducts, fetchCategories } from "../api/api";
+import { fetchProducts } from "../api/api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
 
+import {
+  Container,
+  Grid,
+  Select,
+  MenuItem,
+  Button,
+  Box,
+  Typography,
+  Badge,
+  Stack,
+} from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ClearAllIcon from "@mui/icons-material/ClearAll";
+import PersonIcon from "@mui/icons-material/Person";
+
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  // Use custom context for product list and category selection
-  const { products, dispatch, selectedCategory } = useProductContext();
+  const { products, dispatch, selectedCategory, categories } = useProductContext();
 
-  // Get total count of items in cart from Redux
+  // Select total item count from Redux cart state for cart badge
   const cartCount = useSelector((state: RootState) =>
     state.cart.reduce((sum, item) => sum + item.count, 0)
   );
-  
-  // Fetch product data with React Query
+
+  // Optionally fetch products via React Query (not needed if ProductContext fetches already)
   const { data: productsData, isLoading } = useQuery({
     queryKey: ['products'],
     queryFn: fetchProducts,
   });
 
-  // Populate product list in context when API call completes
+  // If productsData is available from React Query, update the context state
   useEffect(() => {
     if (productsData) {
       dispatch({ type: 'SET_PRODUCTS', payload: productsData.data });
     }
   }, [productsData, dispatch]);
 
-  // Fetch categories with React Query
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: fetchCategories,
-  });
-
-  // Returns filtered product list based on selected category
-  const getFilteredProducts = () => {
-    if (selectedCategory) {
-      return products.filter((product: Product) => product.category === selectedCategory);
-    }
-    return products;
-  };
-
-  const filteredProducts = getFilteredProducts();
+  // Filter products by selected category
+  const filteredProducts = selectedCategory
+    ? products.filter((product: Product) => product.category === selectedCategory)
+    : products;
 
   return (
-    <section className="bg-light py-5">
-      <div className="container">
-        {/* View Cart button with badge showing cart count */}
-        <div className="d-flex justify-content-end mb-3 position-relative">
-          <button
-            className="btn btn-warning position-relative"
-            onClick={() => navigate("/cart")}
-          >
-            View Cart
-            {/* Show badge if cart has items */}
-            {cartCount > 0 && (
-              <span
-                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                style={{ fontSize: "0.85rem" }}
-              >
-                {cartCount}
-              </span>
-            )}
-          </button>
-        </div>
-
-        {/* Category dropdown for filtering products */}
-        <select 
-          onChange={(e) => dispatch({ type: 'SET_SELECTED_CATEGORY', payload: e.target.value })}
-          className="form-select mb-4"
-          value={selectedCategory}
+    <Container maxWidth="lg" sx={{ pt: 6, pb: 6 }}>
+      {/* Action buttons (Cart, Clear Filter, Profile) */}
+      <Stack
+        direction="row"
+        justifyContent="center"
+        spacing={2}
+        mb={3}
+        sx={{ width: "100%" }}
+      >
+        <Button
+          color="secondary"
+          variant="contained"
+          startIcon={
+            <Badge badgeContent={cartCount} color="error">
+              <ShoppingCartIcon />
+            </Badge>
+          }
+          onClick={() => navigate("/cart")}
+          sx={{ fontWeight: 700 }}
         >
-          <option value="">All Categories</option>
-          {/* Render category options dynamically */}
-          {categories?.data.map((category: string) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-        {/* Button to clear selected category */}
-        <button
-          className="btn btn-secondary mb-4 ms-2"
+          Cart
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<ClearAllIcon />}
           onClick={() => dispatch({ type: 'SET_SELECTED_CATEGORY', payload: '' })}
         >
           Clear Filter
-        </button>
-        {/* Navigate to user profile page */}
-        <button
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<PersonIcon />}
           onClick={() => navigate("/profile")}
-          className="btn btn-primary mb-4 ms-2"
         >
-          Go to Profile
-        </button>
-        {/* Loading indicator while products are being fetched */}
-        {isLoading && <div className="text-center">Loading...</div>}
-        <h2 className="text-center fw-bold mb-4">Featured Products</h2>
-        {/* Display filtered products as a responsive grid */}
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-          {filteredProducts.map((product: Product) => (
-            <div className="col d-flex" key={product.id}>
-              <div className="w-100 h-100 d-flex align-items-stretch">
-                <ProductCard product={product} />
-              </div>
-            </div>
+          Profile
+        </Button>
+      </Stack>
+
+      {/* Title and category filter dropdown */}
+      <Box
+        display="flex"
+        flexDirection={{ xs: "column", md: "row" }}
+        alignItems={{ xs: "flex-start", md: "center" }}
+        justifyContent="center"
+        mb={4}
+        gap={3}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 700,
+            mr: { md: 2 },
+            mb: { xs: 2, md: 0 }
+          }}
+        >
+          Featured Products
+        </Typography>
+        {/* Category dropdown, populated from context */}
+        <Select
+          value={selectedCategory}
+          onChange={e => dispatch({ type: 'SET_SELECTED_CATEGORY', payload: e.target.value })}
+          displayEmpty
+          sx={{ minWidth: 200 }}
+        >
+          <MenuItem value="">All Categories</MenuItem>
+          {categories.map((category: string) => (
+            <MenuItem key={category} value={category}>{category}</MenuItem>
           ))}
-        </div>
-      </div>
-    </section>
+        </Select>
+      </Box>
+
+      {/* Products grid or loading indicator */}
+      {isLoading ? (
+        <Typography variant="h6" align="center">Loading...</Typography>
+      ) : (
+        <Grid container spacing={4} justifyContent="center">
+          {filteredProducts.map((product: Product) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={product.id} display="flex" justifyContent="center">
+              {/* Each product rendered as a card */}
+              <ProductCard product={product} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+    </Container>
   );
 };
 
