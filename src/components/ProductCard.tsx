@@ -70,7 +70,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             ${product.price}
           </Typography>
           <Chip
-            label={`${product.rating.rate} ★`}
+            label={`${product?.rating?.rate} ★`}
             size="small"
             sx={{
               bgcolor: "#fff8e1",

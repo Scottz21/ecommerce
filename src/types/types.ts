@@ -12,3 +12,12 @@ export interface Product {
   };
   userId: string;             // ID of the user who created/owns the product
 }
+
+export interface Order {
+  id: string; // Firestore document ID
+  userId: string;
+  products: Product[]; // Array of products in the order  
+  createdAt: number; // Timestamp of when the order was placed
+  total: number; // Total price of the order
+
+}

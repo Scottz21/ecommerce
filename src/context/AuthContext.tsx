@@ -6,14 +6,14 @@ import { auth } from "../firebaseConfig";
 // Defines the shape of our authentication context.
 interface AuthContextType {
   user: User | null;
-  setUser: (user: User) => void;
+  setUser: (user: User|null) => void;
 }
 
 // Create the AuthContext with default values.
 const AuthContext = createContext<AuthContextType>({
   user: null,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setUser: (_user: User) => {}
+  setUser: (_user: User|null) => {}
 });
 
 

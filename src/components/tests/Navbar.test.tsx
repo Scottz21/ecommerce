@@ -24,7 +24,7 @@ const fakeUser = {
   tenantId: null
 } as unknown as User;
 
-const renderWithProviders = (ui: React.ReactElement, { user = null } = {}) => {
+const renderWithProviders = (ui: React.ReactElement, {user = null}: { user?: User | null } = {}) => {
   return render(
     <AuthContext.Provider value={{ user, setUser: jest.fn() }}>
       <MemoryRouter>
