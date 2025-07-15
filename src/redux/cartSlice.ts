@@ -3,8 +3,10 @@ import type { Product } from '../types/types';
 
 // CartItem extends Product to include a count field
 interface CartItem extends Product {
+  id: string; // <- ADD THIS LINE to require id
   count: number;
 }
+
 
 // Load initial cart state from sessionStorage, if present
 const cartFromStorage = sessionStorage.getItem('cart');

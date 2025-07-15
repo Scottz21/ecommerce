@@ -12,8 +12,10 @@ interface AuthContextType {
 // Create the AuthContext with default values.
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  setUser: (user: User) => {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setUser: (_user: User) => {}
 });
+
 
 // Provider component wraps the app and supplies auth state to consumers.
 export const AuthProvider = ({ children }: { children: ReactNode }) => {

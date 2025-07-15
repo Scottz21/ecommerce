@@ -8,9 +8,9 @@ import { fetchProducts } from "../api/api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
 
+
 import {
   Container,
-  Grid,
   Select,
   MenuItem,
   Button,
@@ -19,6 +19,7 @@ import {
   Badge,
   Stack,
 } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
 import PersonIcon from "@mui/icons-material/Person";
@@ -127,14 +128,22 @@ const Home: React.FC = () => {
       {isLoading ? (
         <Typography variant="h6" align="center">Loading...</Typography>
       ) : (
-        <Grid container spacing={4} justifyContent="center">
-          {filteredProducts.map((product: Product) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={product.id} display="flex" justifyContent="center">
-              {/* Each product rendered as a card */}
-              <ProductCard product={product} />
-            </Grid>
-          ))}
-        </Grid>
+    <Grid container spacing={4} justifyContent="center">
+  {filteredProducts.map((product: Product) => (
+    <Grid
+      item
+      xs={12}
+      sm={6}
+      md={4}
+      lg={3}
+      key={product.id}
+      sx={{ display: "flex", justifyContent: "center" }}
+    >
+      <ProductCard product={product} />
+    </Grid>
+  ))}
+</Grid>
+
       )}
     </Container>
   );

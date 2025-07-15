@@ -9,9 +9,9 @@ import {
   Button,
   Stack,
   Divider,
-  Grid,
   Paper,
 } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";

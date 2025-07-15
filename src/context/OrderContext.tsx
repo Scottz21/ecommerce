@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import type { Order, Product } from "../types/types";
@@ -64,3 +65,4 @@ export const useOrderContext = () => {
   if (!ctx) throw new Error("useOrderContext must be used within an OrderProvider");
   return ctx;
 };
+

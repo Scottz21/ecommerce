@@ -1,4 +1,5 @@
-import { createContext, useContext, ReactNode, useReducer, useEffect } from "react";
+import { createContext, useContext, useReducer, useEffect } from "react";
+import type { ReactNode } from "react";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import type { Product } from "../types/types";
