@@ -28,7 +28,7 @@ const productReducer = (state: ProductState, action: ProductAction): ProductStat
     case 'SET_SELECTED_CATEGORY':
       return { ...state, selectedCategory: action.payload };
     default:
-      throw new Error(`Unhandled action type: ${action.type}`);
+      throw new Error(`Unhandled action type: ${action}`);
   }
 };
 

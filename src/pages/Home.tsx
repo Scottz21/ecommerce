@@ -131,11 +131,6 @@ const Home: React.FC = () => {
     <Grid container spacing={4} justifyContent="center">
   {filteredProducts.map((product: Product) => (
     <Grid
-      item
-      xs={12}
-      sm={6}
-      md={4}
-      lg={3}
       key={product.id}
       sx={{ display: "flex", justifyContent: "center" }}
     >

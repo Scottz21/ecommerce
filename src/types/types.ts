@@ -1,6 +1,6 @@
 // Represents a single product in the store
 export interface Product {
-  id?: string;                // Firestore document ID (optional for new products)
+  id: string;                // Firestore document ID (optional for new products)
   title: string;              // Name/title of the product
   price: number;              // Price in USD (or other currency)
   description: string;        // Short product description

@@ -41,8 +41,12 @@ const Cart = () => {
       await placeOrder(cart, totalPrice);
       dispatch(clearCart());
       alert("Checkout complete! Your order was placed and your cart has been cleared.");
-    } catch (err: any) {
-      alert("Failed to place order: " + err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+    console.error('Failed to place order: :', err.message);
+  } else {
+    console.error("Unknown error", err);
+  }
     }
   };
 
@@ -77,7 +81,7 @@ const Cart = () => {
             {/* Product list as responsive grid of cards */}
             <Grid container spacing={3} mb={2}>
               {cart.map((item) => (
-                <Grid item xs={12} sm={6} key={item.id}>
+                <Grid  key={item.id}>
                   <Card sx={{ display: "flex", alignItems: "center", p: 1, borderRadius: 2 }}>
                     {/* Product image thumbnail */}
                     <CardMedia

@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 
@@ -15,8 +15,10 @@ const Register = () => {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("Registration successful!");
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+    setError(err.message)
+  }
     }
   };
 

@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 
@@ -15,8 +15,10 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       alert("Login successful!");
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+    setError(err.message)
+  }
     }
   };
 
@@ -25,9 +27,11 @@ const Login = () => {
     try {
       await signOut(auth);
       alert("Logged out!");
-    } catch (err: any) {
+    } catch (err: unknown) {
       // In production, you may want to show user-friendly feedback here
-      console.error("Logout error:", err.message);
+      if (err instanceof Error) {
+    setError(err.message)
+  }
     }
   };
 

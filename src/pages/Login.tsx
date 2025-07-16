@@ -26,9 +26,11 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       // On success, redirect to profile page
       navigate("/profile");
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Show error if authentication fails
-      setError(err.message || "Failed to log in");
+     if (err instanceof Error) {
+    setError(err.message || "Failed to log in")
+  }
     } finally {
       setLoading(false); // Always clear loading spinner
     }
