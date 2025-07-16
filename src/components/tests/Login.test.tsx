@@ -12,6 +12,9 @@ jest.mock('firebase/auth', () => ({
 
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
+// This will mock window.alert so tests don't crash:
+window.alert = jest.fn();
+
 describe('Login component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
