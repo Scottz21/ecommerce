@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth } from "../firebaseConfig"; // Adjust if file is in a different directory
 import styles from "../styles/auth-styles";
 import { useNavigate } from "react-router-dom";
 
-
-
 const Login = () => {
-  // Local state for controlled form fields and status
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,24 +12,28 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // Handle login form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      // Attempt to sign in user with Firebase Auth
       await signInWithEmailAndPassword(auth, email, password);
-      // On success, redirect to profile page
       navigate("/profile");
     } catch (err: unknown) {
-      // Show error if authentication fails
-     if (err instanceof Error) {
-    setError(err.message || "Failed to log in")
-  }
+      if (err instanceof Error) {
+        setError(err.message || "Failed to log in");
+      }
     } finally {
-      setLoading(false); // Always clear loading spinner
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      // Optional: handle error
     }
   };
 
@@ -40,7 +41,6 @@ const Login = () => {
     <div style={styles.form}>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
-        {/* Show error message if present */}
         {error && <p style={styles.error}>{error}</p>}
         <fieldset style={styles.fieldset}>
           <legend style={styles.legend}>Login</legend>
@@ -69,6 +69,7 @@ const Login = () => {
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
